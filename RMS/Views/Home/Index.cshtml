@@ -1,0 +1,73 @@
+﻿@model HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+
+    bool isCategoryPage = Model.Category is not null;
+
+}
+<div class="row px-4 py-5 my-5 text-center bg-dark-subtle rounded-2">
+    <h1 class="display-4">@(isCategoryPage ? Model.Category?.Name : "Dive into a World of Flavor") </h1>
+    <div class="col-lg-6 mx-auto">
+        @if(isCategoryPage)
+        {
+            <p class="lead mb-4">@Model.Category?.Description</p>
+        }
+        else
+        {
+            @* <h1 class="display-6">Dive into a World of Flavor</h1> *@
+
+            <p class="lead mb-4">Explore our menu featuring juicy Burgers, sizzling Pizzas, piled-high Sandwiches, satisfying Wraps, and mouthwatering Shawarmas.</p>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3 bg-dark-subtle rounded-2 p-4">
+        <h5 class="py-2">Category</h5>
+        <ul class="list-group position-sticky" style="top:20px">
+
+            @{
+                string allActive = isCategoryPage ? "" : "active";
+            }
+
+            <a asp-controller="Home" asp-action="Index" asp-route-id="" class="list-group-item list-group-item-action @allActive">All Items</a>
+
+            @foreach (var item in Model.Categories)
+            {
+                string active = (Model.Category?.Id == item.Id) ? "active" : "";
+
+                <a asp-controller="Home" asp-action="Index" asp-route-id="@item.Id" class="list-group-item list-group-item-action @active">@item.Name</a>
+            }
+        </ul>
+    </div>
+    <div class="col-9">
+        <div class="row gy-4">
+            @foreach (var item in Model.MenuItems)
+            {
+                <div class="col-md-4">
+                    <div class="card text-center bg-dark-subtle">
+                        <img src="@item.ImageURL" height="200" class="card-img-top object-fit-cover rounded-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                             @* <p class="card-text">@item.Description</p> *@
+                            <h3 class="card-title">Rs @item.Price</h3>
+                            <a asp-action="Item" asp-route-id="@item.Id" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+    
+<style>
+        .card
+        {
+            transition: transform 0.2s;
+        }
+        .card:hover
+        {
+            transform: scale(1.05);
+        }
+</style>

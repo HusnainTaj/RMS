@@ -1,0 +1,63 @@
+﻿@model RMS.Models.MenuItem
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="row px-4 py-5 my-5 bg-dark-subtle rounded-2">
+
+    <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <img src="@Model.ImageURL" height="500" class="object-fit-cover border rounded" style="max-width:100%" alt="Menu Item">
+    </div>
+    <div class="col-md-6 p-5 d-flex flex-column justify-content-center ">
+        <p class="text-muted mb-1">
+            <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.CategoryId" class="text-reset link-underline-dark">@Model.Category?.Name</a>
+            </p>
+        <h1 class="display-5 text-body-emphasis">@Model.Name</h1>
+        <p class="lead mb-4 text-muted">@Model.Description</p>
+        <h3 class="display-4 my-4 py-4 fw-bold ">Rs @Model.Price</h3>
+
+        <div class="row mt-4">
+            <div class="col-5">
+                <div class="input-group text-center">
+                    <button class="btn btn-lg btn-dark" type="button">-</button>
+                    <input type="number" class="form-control form-control-lg text-center border-0 py-3" placeholder="" value="1">
+                    <button class="btn btn-lg btn-dark" type="button">+</button>
+                </div>
+            </div>
+            <div class="col-7">
+                <button class="btn btn-lg w-100 btn-primary py-3">Add to Cart</button>
+            </div>
+        </div>
+
+    </div>
+   
+</div>
+
+
+<div class="row px-4 py-5 my-5 bg-dark-subtle rounded-2">
+
+    <h1>Reviews</h1>
+    @if(Model.Reviews.Count == 0)
+    {
+        <p>No reviews yet</p>
+    }
+    else
+    {
+    }
+</div>
+
+
+<style>
+    input[type="number"]
+    {
+        -webkit-appearance: none;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+</style>
