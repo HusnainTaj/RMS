@@ -22,7 +22,9 @@ namespace RMS.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Orders.Include(o => o.Customer).Include(o => o.Payment).Include(o => o.Promotion).Include(o=>o.OrderItems).ThenInclude(oi=>oi.MenuItem);
+            var applicationDbContext = _context.Orders
+                .Include(o=>o.Reservation)
+                .Include(o => o.Customer).Include(o => o.Payment).Include(o => o.Promotion).Include(o=>o.OrderItems).ThenInclude(oi=>oi.MenuItem);
             return View(await applicationDbContext.ToListAsync());
         }
 

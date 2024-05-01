@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = Model.Name;
+
+    bool inStock = Model.Stocks.Sum(s => s.Quantity) > 0;
+    int stockCount = Model.Stocks.Sum(s => s.Quantity);
 }
 
 <div class="row px-4 py-5 my-5 bg-dark-subtle rounded-2">
@@ -17,16 +20,24 @@
         <p class="lead mb-4 text-muted">@Model.Description</p>
         <h3 class="display-4 my-4 py-4 fw-bold ">Rs @Model.Price</h3>
 
-        <div class="row mt-4">
+        <p class="lead text-muted ps-2">@stockCount Left in Stock</p>
+        <div class="row">
             <div class="col-5">
                 <div class="input-group text-center">
                     <button class="btn btn-lg btn-dark" type="button" id="itemQMinus">-</button>
-                    <input id="itemQuantity"  type="number" class="form-control form-control-lg text-center border-0 py-3" placeholder="" value="1">
+                    <input id="itemQuantity" type="number" class="form-control form-control-lg text-center border-0 py-3" placeholder="" value="1" max="@Model.Stocks.Sum(s => s.Quantity)">
                     <button class="btn btn-lg btn-dark" type="button" id="itemQAdd">+</button>
                 </div>
             </div>
             <div class="col-7">
-                <button class="btn btn-lg w-100 btn-primary py-3" id="AddToCartBtn">Add to Cart</button>
+                @if (inStock)
+                {
+                    <button class="btn btn-lg w-100 btn-primary py-3" id="AddToCartBtn">Add to Cart</button>
+                }
+                else
+                {
+                    <button class="btn btn-lg w-100 btn-danger py-3 disabled" id="AddToCartBtn">Out of Stock</button>
+                }
             </div>
         </div>
 
@@ -42,6 +53,8 @@
             {
                 var currentValue = parseInt($('#itemQuantity').val()) || 0;
                 $('#itemQuantity').val(currentValue + 1);
+                if (currentValue > @stockCount) $('#itemQuantity').val(@stockCount);
+
             });
 
             $('#itemQMinus').on('click', function () 

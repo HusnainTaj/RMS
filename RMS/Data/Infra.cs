@@ -5,10 +5,4 @@
         public static string ROLE_ADMIN = "Admin";
     }
 
-    public enum ReservationStatus
-    {
-        Pending,
-        Confirmed,
-        Cancelled
-    }
 }

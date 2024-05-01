@@ -20,7 +20,12 @@
                     <thead class="border-bottom">
                         <tr>
                             <th class="w-75">
+                                <span class="badge text-bg-info">@item.Type</span>
                                 Order #@item.Id by @item.Customer.Name
+                                @if(item.Type == OrderType.DineIn)
+                                {
+                                    <span>on Table #@item.Reservation?.TableId</span>
+                                }
                             </th>
                             <th class="w-25">
                                 Payment @item.Payment.Status

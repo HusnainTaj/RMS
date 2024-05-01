@@ -4,6 +4,13 @@
     ViewData["Title"] = "Cart";
 }
 
+@if (TempData["Error"] is not null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
 <div class="row mb-4">
     <div class="col-12 bg-dark-subtle p-4 rounded-2 overflow-hidden">
         <h1 class="mb-4 text-center">@ViewData["Title"]</h1>
@@ -70,11 +77,12 @@
 
             <input type="text" id="promoCode" class="form-control" placeholder="Promo Code">
 
-            <div class="text-center">
+            <div class="d-flex justify-content-between">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="orderTypeRadios" id="inlineRadio2" value="0" checked>
                     <label class="form-check-label" for="inlineRadio2">Delivery</label>
                 </div>
+
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="orderTypeRadios" id="inlineRadio1" value="1" >
                     <label class="form-check-label" for="inlineRadio1">Dine in</label>
@@ -84,9 +92,9 @@
                     <label class="form-check-label" for="inlineRadio3">Take away</label>
                 </div>
             </div>
+            <input type="number" id="guestCount" class="form-control" placeholder="Guest Count" value="" style="display: none;">
 
-
-                <button  id="CODBTN" class="btn btn-primary w-100">COD Checkout</button>
+            <button  id="CODBTN" class="btn btn-primary w-100">COD Checkout</button>
 
             <hr class="m-0" />
 
@@ -111,7 +119,7 @@
             $('#CODBTN').on('click', async function () {
                 try
                 {
-                    window.location.assign("/Cart/Checkout/0?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val());
+                    window.location.assign("/Cart/Checkout/0?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val() + "&guestCount=" + $("#guestCount").val());
                 }
                 catch(e)
                 {
@@ -121,12 +129,29 @@
 
             $('#CARDBTN').on('click', async function () {
                 try {
-                    window.location.assign("/Cart/Checkout/1?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val());
+                    window.location.assign("/Cart/Checkout/1?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val() + "&guestCount=" + $("#guestCount").val());
                 }
                 catch (e) {
                     console.log(e);
                 }
             });
+
+            $("[name=orderTypeRadios]").change(function () 
+            {
+                $("#guestCount").val("");
+
+                if($("[name=orderTypeRadios]:checked").val() == 1)
+                {
+                    $("#guestCount").show();
+                }
+                else
+                {
+                    $("#guestCount").hide();
+                }
+            })
+
+
+
         });
     </script>
 }

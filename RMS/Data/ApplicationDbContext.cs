@@ -13,7 +13,7 @@ namespace RMS.Data
             
         }
         public DbSet<Supplier> Supplier { get; set; } = default!;
-        //public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<MenuItem> MenuItems { get; set; } = null!;

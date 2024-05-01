@@ -20,7 +20,11 @@
                     <thead class="border-bottom">
                         <tr>
                             <th class="w-75">
-                                Order #@item.Id
+                                <span class="badge text-bg-info">@item.Type</span> Order #@item.Id
+                                @if (item.Type == OrderType.DineIn)
+                                {
+                                    <span>on Table #@item.Reservation?.TableId</span>
+                                }
                             </th>
                             <th class="w-25 @(@item.Status == OrderStatus.Completed ? "text-success" : "")">
                                 <span class="badge text-bg-secondary @(@item.Status == OrderStatus.Cancelled ? "text-bg-danger" : "") @(@item.Status == OrderStatus.Completed ? "text-bg-success" : "")">
@@ -37,7 +41,14 @@
                                     @oi.Quantity x <a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="Item" asp-route-id="@oi.MenuItemId">@oi.MenuItem.Name</a>
                                     @if (item.Status == OrderStatus.Completed)
                                     {
-                                        <a asp-action="Review" asp-route-id="@oi.MenuItemId" class="link-offset-3 link-light ps-4">Give Feedback</a>
+                                        if (oi.Reviewed)
+                                        {
+                                            <span class="text-muted ps-4">Reviewed</span>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Review" asp-route-id="@oi.Id" class="link-offset-3 link-light ps-4">Give Feedback</a>
+                                        }
                                     }
                                 </td>
                                 <td class="w-25">

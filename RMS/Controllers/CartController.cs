@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS.Data;
 using RMS.Models;
@@ -54,8 +55,26 @@ namespace RMS.Controllers
         }
 
         [Authorize]
-        public IActionResult Checkout(int id, string orderType, string promoCode)
+        public IActionResult Checkout(int id, string orderType, string promoCode, int guestCount)
         {
+            Table? table = null;
+            if(Convert.ToInt32(orderType) == (int)OrderType.DineIn)
+            {
+                if(guestCount == 0)
+                {
+                    TempData["Error"] = "Please enter the number of guests for Dine in orders.";
+                    return RedirectToAction("Index");
+                }
+
+                table = _context.Tables.Include(t=>t.Reservations).FirstOrDefault(t=>t.Capacity >= guestCount && t.Reservations.All(r=>r.Date < DateTime.Now));
+
+                if (table is null)
+                {
+                    TempData["Error"] = "No tables available at the moment. Come back later!";
+                    return RedirectToAction("Index");
+                }
+            }
+
             var cart = GetCart();
 
             bool isCashPayment = id == 0;
@@ -73,6 +92,9 @@ namespace RMS.Controllers
                         MenuItemId = item.Id,
                         Quantity = item.Quantity,
                     });
+                    var stock = _context.Stocks.FirstOrDefault(s => s.MenuItemId == item.Id);
+
+                    if(stock is not null) stock.Quantity -= item.Quantity;
                 }
 
                 Promotion? promotion = null;
@@ -98,6 +120,22 @@ namespace RMS.Controllers
                 _context.Orders.Add(order);
 
                 _context.SaveChanges();
+
+                if(table is not null)
+                {
+                    var reservation = new Reservation
+                    {
+                        Date = DateTime.Now.AddMinutes(30),
+                        TableId = table.Id,
+                        OrderId = order.Id,
+                        Status = ReservationStatus.Reserved,
+                    };
+                    table.Reservations.Add(reservation);
+
+                    _context.SaveChanges();
+
+                    order.ReservationId = reservation.Id;
+                }
 
                 _context.Payments.Add(new Payment
                 {

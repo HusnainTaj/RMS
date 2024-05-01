@@ -42,13 +42,16 @@ namespace RMS.Controllers
         public async Task<IActionResult> Item(int id)
         {
             return View((await _context.MenuItems.Include(m=>m.Category).Include(m=>m.Reviews).ThenInclude(r=>r.Customer)
+                .Include(m=>m.Stocks)
                 .ToListAsync()).Find(i => i.Id.Equals(id)));
         }
 
         [Authorize]
         public async Task<IActionResult> Orders()
         {
-            return View(await _context.Orders.Include(M=>M.Promotion).Include(m => m.OrderItems).ThenInclude(oi=>oi.MenuItem).Where(o=>o.CustomerId == User.GetUserId()).ToListAsync());
+            return View(await _context.Orders
+                .Include(o => o.Reservation)
+                .Include(M=>M.Promotion).Include(m => m.OrderItems).ThenInclude(oi=>oi.MenuItem).Where(o=>o.CustomerId == User.GetUserId()).ToListAsync());
         }
 
 
@@ -56,20 +59,29 @@ namespace RMS.Controllers
         [Authorize]
         public IActionResult Review(int id)
         {
-            return View(_context.MenuItems.FirstOrDefault(i => i.Id == id));
+            return View(_context.OrderItems.Include(oi=>oi.MenuItem).FirstOrDefault(i => i.Id == id));
         }
 
         [HttpGet]
         [Authorize]
         public IActionResult SubmitReview(int id, string txt)
         {
+            var item = _context.OrderItems.FirstOrDefault(i => i.Id == id);
+
+            if (item is null)
+            {
+                return RedirectToAction("Orders", "Home");
+            }
+
             _context.Reviews.Add(new Review
             {
-                ItemId = id,
+                ItemId = item.MenuItemId,
                 CustomerId = User.GetUserId()!,
                 Date = DateTime.Now,
                 Text = txt
             });
+
+            item.Reviewed = true;
 
             _context.SaveChanges();
 

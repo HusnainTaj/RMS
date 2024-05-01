@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMS.Data;
 
@@ -11,9 +12,11 @@ using RMS.Data;
 namespace RMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501182810_stonks")]
+    partial class stonks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,9 +338,6 @@ namespace RMS.Migrations
                     b.Property<int?>("PromotionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -349,8 +349,6 @@ namespace RMS.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("PromotionId");
-
-                    b.HasIndex("ReservationId");
 
                     b.ToTable("Orders");
                 });
@@ -371,9 +369,6 @@ namespace RMS.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Reviewed")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -455,14 +450,12 @@ namespace RMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -472,9 +465,7 @@ namespace RMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("OrderId");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("TableId");
 
@@ -663,15 +654,9 @@ namespace RMS.Migrations
                         .WithMany()
                         .HasForeignKey("PromotionId");
 
-                    b.HasOne("RMS.Models.Reservation", "Reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationId");
-
                     b.Navigation("Customer");
 
                     b.Navigation("Promotion");
-
-                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("RMS.Models.OrderItem", b =>
@@ -706,13 +691,9 @@ namespace RMS.Migrations
 
             modelBuilder.Entity("RMS.Models.Reservation", b =>
                 {
-                    b.HasOne("RMS.Models.AppUser", null)
+                    b.HasOne("RMS.Models.AppUser", "Customer")
                         .WithMany("Reservations")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("RMS.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -722,7 +703,7 @@ namespace RMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Customer");
 
                     b.Navigation("Table");
                 });

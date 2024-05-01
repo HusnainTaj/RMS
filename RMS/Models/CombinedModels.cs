@@ -210,13 +210,18 @@ namespace RMS.Models
         public string CustomerId { get; set; } = null!;
 
         public int? PromotionId { get; set; }
+        public int? ReservationId { get; set; }
 
         [ForeignKey("CustomerId")]
         public AppUser Customer { get; set; } = null!;
 
         [ForeignKey("PromotionId")]
         public Promotion? Promotion { get; set; }
-        public Payment Payment { get; set; }
+
+        [ForeignKey("ReservationId")]
+        public Reservation? Reservation { get; set; }
+
+        public Payment Payment { get; set; } = null!;
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
     public class OrderItem
@@ -225,6 +230,9 @@ namespace RMS.Models
 
         [Required]
         public int Quantity { get; set; }
+
+        [Required]
+        public bool Reviewed { get; set; } = false;
 
         [Required]
         public int OrderId { get; set; }
@@ -277,18 +285,14 @@ namespace RMS.Models
         public int TableId { get; set; }
 
         [Required]
-        public string CustomerId { get; set; } = null!;
-
-        //[Required]
-        //public int StatusId { get; set; }
+        public int OrderId { get; set; }
 
         [ForeignKey("TableId")]
         public Table Table { get; set; } = null!;
 
-        [ForeignKey("CustomerId")]
-        public AppUser Customer { get; set; } = null!;
+        [ForeignKey("OrderId")]
+        public Order Order { get; set; } = null!;
 
-        //[ForeignKey("StatusId")]
         [Required]
         public ReservationStatus Status { get; set; } = ReservationStatus.Available;
     }
