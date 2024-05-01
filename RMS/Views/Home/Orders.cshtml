@@ -1,0 +1,82 @@
+﻿@model IEnumerable<RMS.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="row mb-4">
+    <div class="col-12 bg-dark-subtle p-4 rounded-2 overflow-hidden">
+        <h1 class="mb-4 text-center">@ViewData["Title"]</h1>
+
+        @if (Model.Count() <= 0)
+        {
+            <h4 class="text-center my-5">You have not ordered anything yet.</h4>
+        }
+        else
+        {
+            @foreach (var item in Model.OrderByDescending(i=>i.Date))
+            {
+                <table class="table my-2 table-borderless rounded-2 overflow-hidden">
+                    <thead class="border-bottom">
+                        <tr>
+                            <th class="w-75">
+                                Order #@item.Id
+                            </th>
+                            <th class="w-25 @(@item.Status == OrderStatus.Completed ? "text-success" : "")">
+                                <span class="badge text-bg-secondary @(@item.Status == OrderStatus.Cancelled ? "text-bg-danger" : "") @(@item.Status == OrderStatus.Completed ? "text-bg-success" : "")">
+                                    @item.Status
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        @foreach (var oi in item.OrderItems)
+                        {
+                            <tr>
+                                <td class="w-75">
+                                    @oi.Quantity x <a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="Item" asp-route-id="@oi.MenuItemId">@oi.MenuItem.Name</a>
+                                    @if (item.Status == OrderStatus.Completed)
+                                    {
+                                        <a asp-action="Review" asp-route-id="@oi.MenuItemId" class="link-offset-3 link-light ps-4">Give Feedback</a>
+                                    }
+                                </td>
+                                <td class="w-25">
+                                    Rs @oi.MenuItem.Price
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="border-top">
+                            <td class="w-75">
+
+                                @* @oi.Quantity x @oi.MenuItem.Name *@
+                            </td>
+                            <td class="w-25">
+                                @{
+                                    decimal totalAmount = item.OrderItems.Sum(o => o.MenuItem.Price * o.Quantity);
+                                }
+
+                                @if(item.Promotion is null)
+                                {
+                                    <strong>
+                                        Rs @totalAmount
+                                    </strong>
+                                }
+                                else
+                                {
+                                    <strong>
+                                        Rs @((totalAmount - (item.Promotion.DiscountPercentage / 100) * totalAmount).ToString("#.##"))
+                                    </strong>
+                                    <del class="ps-2 text-muted">Rs @totalAmount</del>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            }
+
+        }
+    </div>
+
+</div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS.Data;
 using RMS.Models;
@@ -15,12 +16,12 @@ namespace RMS.Controllers
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            
             _context = context;
         }
 
         public async Task<IActionResult> Index(int? id)
         {
-
             if (id != null)
             {
                 return View(new HomeViewModel
@@ -40,7 +41,39 @@ namespace RMS.Controllers
 
         public async Task<IActionResult> Item(int id)
         {
-            return View((await _context.MenuItems.Include(m=>m.Category).ToListAsync()).Find(i => i.Id.Equals(id)));
+            return View((await _context.MenuItems.Include(m=>m.Category).Include(m=>m.Reviews).ThenInclude(r=>r.Customer)
+                .ToListAsync()).Find(i => i.Id.Equals(id)));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Orders()
+        {
+            return View(await _context.Orders.Include(M=>M.Promotion).Include(m => m.OrderItems).ThenInclude(oi=>oi.MenuItem).Where(o=>o.CustomerId == User.GetUserId()).ToListAsync());
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Review(int id)
+        {
+            return View(_context.MenuItems.FirstOrDefault(i => i.Id == id));
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult SubmitReview(int id, string txt)
+        {
+            _context.Reviews.Add(new Review
+            {
+                ItemId = id,
+                CustomerId = User.GetUserId()!,
+                Date = DateTime.Now,
+                Text = txt
+            });
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Orders", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

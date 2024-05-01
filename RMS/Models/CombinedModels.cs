@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,13 +26,13 @@ namespace RMS.Models
         public int Id { get; set; }
 
         [Required]
+        public int Quantity { get; set; }
+
+        [Required]
         public int MenuItemId { get; set; }
 
         [Required]
         public int SupplierId { get; set; }
-
-        [Required]
-        public int Quantity { get; set; }
 
         [ForeignKey("MenuItemId")]
         public MenuItem MenuItem { get; set; } = null!;
@@ -39,7 +40,6 @@ namespace RMS.Models
         [ForeignKey("SupplierId")]
         public Supplier Supplier { get; set; } = null!;
     }
-
     public class MenuItem
     {
         public int Id { get; set; }
@@ -62,6 +62,7 @@ namespace RMS.Models
 
         [Required]
         public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
         public Category Category { get; set; } = null!;
 
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
@@ -77,7 +78,6 @@ namespace RMS.Models
         public string Description { get; set; } = null!;
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
     }
-
     public class Review
     {
         public int Id { get; set; }
@@ -109,45 +109,49 @@ namespace RMS.Models
         [DataType(DataType.Currency)]
 
         public decimal Amount { get; set; }
-
         [Required]
         public DateTime Date { get; set; }
 
         [Required]
+        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
+
+        [Required]
+        public PaymentMethod Method { get; set; }
+
+        [Required]
         public int OrderId { get; set; }
-
-        [Required]
-        public int StatusId { get; set; }
-
-        [Required]
-        public int MethodId { get; set; }
 
         [ForeignKey("OrderId")]
         public Order Order { get; set; } = null!;
-
-        [ForeignKey("StatusId")]
-        public PaymentStatus Status { get; set; } = null!;
-
-        [ForeignKey("MethodId")]
-        public PaymentMethod Method { get; set; } = null!;
     }
-    public class PaymentMethod
+    public enum PaymentStatus
     {
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(255)]
-        public string Name { get; set; } = null!;
+        Pending,
+        Paid,
+        Refunded
     }
-    public class PaymentStatus
+    public enum PaymentMethod
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(255)]
-        public string Name { get; set; } = null!;
+        Cash,
+        Card
     }
+    //public class PaymentMethod
+    //{
+    //    public int Id { get; set; }
+
+    //    [Required]
+    //    [StringLength(255)]
+    //    public string Name { get; set; } = null!;
+    //}
+    //public class PaymentStatus
+    //{
+    //    [Key]
+    //    public int Id { get; set; }
+
+    //    [Required]
+    //    [StringLength(255)]
+    //    public string Name { get; set; } = null!;
+    //}
    
     public class Promotion
     {
@@ -163,6 +167,10 @@ namespace RMS.Models
         public string Name { get; set; } = null!;
 
         [Required]
+        [Range(0, 100)]
+        public decimal DiscountPercentage {  get; set; }
+
+        [Required]
         public DateTime Start { get; set; }
 
         [Required]
@@ -170,6 +178,22 @@ namespace RMS.Models
 
         //public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
+
+
+    public enum OrderType
+    {
+        Delivery,
+        DineIn,
+        TakeAway
+    }
+    public enum OrderStatus
+    {
+        Pending,
+        Processing,
+        Completed, 
+        Cancelled
+    }
+
     public class Order
     {
         [Key]
@@ -177,30 +201,22 @@ namespace RMS.Models
 
         [Required]
         public DateTime Date { get; set; }
+        [Required]
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+        [Required]
+        public OrderType Type { get; set; }
 
         [Required]
         public string CustomerId { get; set; } = null!;
-
-        [Required]
-        public int StatusId { get; set; }
-
-        [Required]
-        public int TypeId { get; set; }
 
         public int? PromotionId { get; set; }
 
         [ForeignKey("CustomerId")]
         public AppUser Customer { get; set; } = null!;
 
-        [ForeignKey("StatusId")]
-        public OrderStatus Status { get; set; } = null!;
-
-        [ForeignKey("TypeId")]
-        public OrderType Type { get; set; } = null!;
-
         [ForeignKey("PromotionId")]
         public Promotion? Promotion { get; set; }
-
+        public Payment Payment { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
     public class OrderItem
@@ -223,23 +239,23 @@ namespace RMS.Models
         public MenuItem MenuItem { get; set; } = null!;
 
     }
-    public class OrderType
-    {
-        public int Id { get; set; }
+    //public class OrderType
+    //{
+    //    public int Id { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Name { get; set; } = null!;   
-    }
-    public class OrderStatus
-    {
-        [Key]
-        public int Id { get; set; }
+    //    [Required]
+    //    [StringLength(255)]
+    //    public string Name { get; set; } = null!;   
+    //}
+    //public class OrderStatus
+    //{
+    //    [Key]
+    //    public int Id { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Name { get; set; } = null!;
-    }
+    //    [Required]
+    //    [StringLength(255)]
+    //    public string Name { get; set; } = null!;
+    //}
     public class Table
     {
         [Key]

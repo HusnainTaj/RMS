@@ -1,0 +1,132 @@
+﻿@model IEnumerable<RMS.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div class="row mb-4">
+    <div class="col-12 bg-dark-subtle p-4 rounded-2 overflow-hidden">
+        <h1 class="mb-4 text-center">@ViewData["Title"]</h1>
+
+        @if(Model.Count() <= 0)
+        {
+            <h4 class="text-center my-5">Your cart is empty. Go add some items.</h4>
+        }
+        else
+        {
+            <table class="table align-middle table-hover m-0 rounded-2 overflow-hidden  ">
+                <thead class="border-bottom">
+                    <tr>
+                        <th>
+                            Item
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.ImgURL" width="100" height="100" alt="Image" class="img-thumbnail me-4" />
+
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.Price
+                            </td>
+                            <td>
+                                @item.Quantity
+                            </td>
+
+                            <td class="text-center">
+                                <a asp-action="Delete" asp-route-id="@item.Id" type="button" class="btn-close DeleteFromCartBtn"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+    </div>
+
+</div>
+@if (Model.Count() > 0)
+{
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4 bg-dark-subtle p-4 rounded-2 d-flex flex-column" style="gap:20px">
+
+            <h3 class="d-flex justify-content-between">
+                <span class="text-muted">Total</span>
+                <span class="">Rs @Model.Sum(x => x.Price * x.Quantity)</span>
+            </h3>
+
+            <input type="text" id="promoCode" class="form-control" placeholder="Promo Code">
+
+            <div class="text-center">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="orderTypeRadios" id="inlineRadio2" value="0" checked>
+                    <label class="form-check-label" for="inlineRadio2">Delivery</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="orderTypeRadios" id="inlineRadio1" value="1" >
+                    <label class="form-check-label" for="inlineRadio1">Dine in</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="orderTypeRadios" id="inlineRadio3" value="2">
+                    <label class="form-check-label" for="inlineRadio3">Take away</label>
+                </div>
+            </div>
+
+
+                <button  id="CODBTN" class="btn btn-primary w-100">COD Checkout</button>
+
+            <hr class="m-0" />
+
+            <input type="text" class="form-control" placeholder="Card Number">
+            <div class="d-flex" style="gap:20px">
+                <input type="date" class="form-control" placeholder="Date">
+                <input type="text" class="form-control" placeholder="CVV">
+            </div>
+
+            <button type="submit" id="CARDBTN" class="btn btn-primary w-100">Card Checkout</button>
+
+        </div>
+    </div>
+}
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#CODBTN').on('click', async function () {
+                try
+                {
+                    window.location.assign("/Cart/Checkout/0?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val());
+                }
+                catch(e)
+                {
+                    console.log(e);
+                }
+            });
+
+            $('#CARDBTN').on('click', async function () {
+                try {
+                    window.location.assign("/Cart/Checkout/1?orderType=" + $("[name=orderTypeRadios]:checked").val() + "&promoCode=" + $("#promoCode").val());
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            });
+        });
+    </script>
+}

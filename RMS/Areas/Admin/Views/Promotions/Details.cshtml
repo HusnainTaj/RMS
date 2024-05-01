@@ -4,9 +4,8 @@
     ViewData["Title"] = "Promotion Details";
 }
 
-<h1>Promotion Details</h1>
-
 <div>
+    <h4>Promotion Details</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -20,6 +19,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DiscountPercentage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DiscountPercentage)%
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Start)

@@ -51,7 +51,7 @@ namespace RMS.Areas.Admin.Controllers
         // GET: Admin/MenuItem/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 

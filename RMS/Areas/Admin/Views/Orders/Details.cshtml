@@ -1,0 +1,89 @@
+﻿@model RMS.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div>
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Items
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var oi in Model.OrderItems)
+            {
+                <p>@oi.Quantity x <a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="Item" asp-route-id="@oi.MenuItemId">@oi.MenuItem.Name</a> (Rs @oi.MenuItem.Price)</p>
+            }
+        </dd>
+
+        <dt class="col-sm-2">
+            Total Price
+        </dt>
+        <dd class="col-sm-10">
+            Rs @Model.OrderItems.Sum(o => o.MenuItem.Price * o.Quantity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Customer.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.Address)
+        </dd>
+        <dt class="col-sm-2">
+            Payment @Html.DisplayNameFor(model => model.Payment.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Payment.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            Payment @Html.DisplayNameFor(model => model.Payment.Method)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Payment.Method)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Promotion)
+        </dt>
+        <dd class = "col-sm-10">
+            @if(Model.Promotion is null)
+            {
+                <span>None</span>
+            }
+            else
+            {
+
+                @Html.DisplayFor(model => model.Promotion.Code)
+            }
+
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="MarkComplete" asp-route-id="@Model.Id" class="btn  btn-success">Mark As Complete</a>
+    <a asp-action="MarkCancel" asp-route-id="@Model.Id" class="btn  btn-danger">Cancel</a>
+</div>

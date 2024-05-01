@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMS.Data;
 
@@ -11,9 +12,11 @@ using RMS.Data;
 namespace RMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428143029_enumify")]
+    partial class enumify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,37 +379,6 @@ namespace RMS.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("RMS.Models.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Method")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("RMS.Models.Promotion", b =>
                 {
                     b.Property<int>("Id")
@@ -419,9 +391,6 @@ namespace RMS.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
@@ -675,17 +644,6 @@ namespace RMS.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("RMS.Models.Payment", b =>
-                {
-                    b.HasOne("RMS.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("RMS.Models.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("RMS.Models.Reservation", b =>
                 {
                     b.HasOne("RMS.Models.AppUser", "Customer")
@@ -771,9 +729,6 @@ namespace RMS.Migrations
             modelBuilder.Entity("RMS.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-
-                    b.Navigation("Payment")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("RMS.Models.Supplier", b =>

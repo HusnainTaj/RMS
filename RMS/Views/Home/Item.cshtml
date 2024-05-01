@@ -20,13 +20,13 @@
         <div class="row mt-4">
             <div class="col-5">
                 <div class="input-group text-center">
-                    <button class="btn btn-lg btn-dark" type="button">-</button>
-                    <input type="number" class="form-control form-control-lg text-center border-0 py-3" placeholder="" value="1">
-                    <button class="btn btn-lg btn-dark" type="button">+</button>
+                    <button class="btn btn-lg btn-dark" type="button" id="itemQMinus">-</button>
+                    <input id="itemQuantity"  type="number" class="form-control form-control-lg text-center border-0 py-3" placeholder="" value="1">
+                    <button class="btn btn-lg btn-dark" type="button" id="itemQAdd">+</button>
                 </div>
             </div>
             <div class="col-7">
-                <button class="btn btn-lg w-100 btn-primary py-3">Add to Cart</button>
+                <button class="btn btn-lg w-100 btn-primary py-3" id="AddToCartBtn">Add to Cart</button>
             </div>
         </div>
 
@@ -34,16 +34,83 @@
    
 </div>
 
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#itemQAdd').on('click', function () 
+            {
+                var currentValue = parseInt($('#itemQuantity').val()) || 0;
+                $('#itemQuantity').val(currentValue + 1);
+            });
+
+            $('#itemQMinus').on('click', function () 
+            {
+                var currentValue = parseInt($('#itemQuantity').val()) || 2;
+                if (currentValue > 0) $('#itemQuantity').val(currentValue - 1);
+            });
+
+            $('#AddToCartBtn').on('click',async function () {
+
+                try
+                {
+                    $(this).addClass('disabled');
+                    $(this).text('Adding...');
+
+
+                    var formData = new FormData();
+                    formData.append('Id', @Model.Id);
+                    formData.append('Name', "@Model.Name");
+                    formData.append('ImgURL', "@Model.ImageURL");
+                    formData.append('Price', @Model.Price);
+                    formData.append('Quantity', parseInt($('#itemQuantity').val()));
+
+                    await fetch("/Cart/Add", {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    $(this).text('Added!');
+
+                    setTimeout(() => {
+                        $(this).removeClass('disabled');
+                        $(this).text('Add to Cart');
+                    }, 1000);
+
+                }
+                catch (error)
+                {
+                    console.error(error);
+                }
+            });
+
+        });
+    </script>
+}
+
+
 
 <div class="row px-4 py-5 my-5 bg-dark-subtle rounded-2">
 
     <h1>Reviews</h1>
     @if(Model.Reviews.Count == 0)
     {
-        <p>No reviews yet</p>
+        <p class="m-0">No reviews yet</p>
     }
     else
     {
+        <div class="row mt-2" style="gap:20px">
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="col-12 m-0">
+                    <div class="p-4 rounded-2 bg-body-tertiary">
+                        <h6>@review.Customer.Name <span class="text-muted mx-2">@review.Date.ToShortDateString()</span></h6>
+                        <p class="m-0">@review.Text</p>
+                    </div>
+                </div>
+            }
+        </div>
+
     }
 </div>
 

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<RMS.Models.Order>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="row mb-4">
+    <div class="col-12 bg-dark-subtle p-4 rounded-2 overflow-hidden">
+        <h1 class="mb-4 text-center">Pending Orders</h1>
+
+        @if (Model.Where(o => o.Status == OrderStatus.Pending).Count() <= 0)
+        {
+            <h4 class="text-center my-5">There are no pending orders right now.</h4>
+        }
+        else
+        {
+            @foreach (var item in Model.Where(o=>o.Status == OrderStatus.Pending))
+            {
+                <table class="table my-2 table-borderless rounded-2 overflow-hidden">
+                    <thead class="border-bottom">
+                        <tr>
+                            <th class="w-75">
+                                Order #@item.Id by @item.Customer.Name
+                            </th>
+                            <th class="w-25">
+                                Payment @item.Payment.Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        @foreach (var oi in item.OrderItems)
+                        {
+                            <tr>
+                                <td class="w-75">
+                                    @oi.Quantity x <a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="Item" asp-route-id="@oi.MenuItemId">@oi.MenuItem.Name</a>
+                                </td>
+
+                                <td class="w-25">
+                                    Rs @oi.MenuItem.Price
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="border-top">
+                            <td class="w-75">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Details</a>
+                                <a asp-action="MarkComplete" asp-route-id="@item.Id" class="btn btn-sm btn-success">Mark As Complete</a>
+                                <a asp-action="MarkCancel" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Cancel</a>
+                            </td>
+                            <td class="w-25">
+                                @{
+                                    decimal totalAmount = item.OrderItems.Sum(o => o.MenuItem.Price * o.Quantity);
+                                }
+
+                                @if (item.Promotion is null)
+                                {
+                                    <strong>
+                                        Rs @totalAmount
+                                    </strong>
+                                }
+                                else
+                                {
+                                    <strong>
+                                        Rs @((totalAmount - (item.Promotion.DiscountPercentage / 100) * totalAmount).ToString("#.##"))
+                                    </strong>
+                                    <del class="ps-2 text-muted">Rs @totalAmount</del>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        }
+    </div>
+
+</div>
