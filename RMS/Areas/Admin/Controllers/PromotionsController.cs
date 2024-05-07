@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using RMS.Models;
 namespace RMS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class PromotionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,8 +25,9 @@ namespace RMS.Areas.Admin.Controllers
         // GET: Admin/Promotions
         public async Task<IActionResult> Index()
         {
+            //await _context.Promotions.ToListAsync()
               return _context.Promotions != null ? 
-                          View(await _context.Promotions.ToListAsync()) :
+                          View(await _context.Promotions.FromSqlRaw("EXECUTE GetPromotions").ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Promotions'  is null.");
         }
 

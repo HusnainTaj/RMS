@@ -21,11 +21,8 @@
                     <ul class="navbar-nav flex-grow-1">
                        
 
-                        @if (User.IsInRole(RMS.Data.Infra.ROLE_ADMIN))
+                        @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Dashboard</a>
-                            </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Admin" asp-controller="Orders" asp-action="Index">Orders</a>

@@ -248,7 +248,7 @@ namespace RMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.EmployeeBonus", b =>
@@ -278,7 +278,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeBonus");
+                    b.ToTable("EmployeeBonus", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.MenuItem", b =>
@@ -314,7 +314,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("MenuItems");
+                    b.ToTable("MenuItems", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Order", b =>
@@ -352,7 +352,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.OrderItem", b =>
@@ -381,7 +381,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Payment", b =>
@@ -412,7 +412,7 @@ namespace RMS.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Promotion", b =>
@@ -444,7 +444,7 @@ namespace RMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions");
+                    b.ToTable("Promotions", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Reservation", b =>
@@ -478,7 +478,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("TableId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Review", b =>
@@ -510,7 +510,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Stock", b =>
@@ -536,7 +536,7 @@ namespace RMS.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Stocks");
+                    b.ToTable("Stocks", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Supplier", b =>
@@ -559,7 +559,7 @@ namespace RMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Supplier");
+                    b.ToTable("Supplier", (string)null);
                 });
 
             modelBuilder.Entity("RMS.Models.Table", b =>
@@ -575,7 +575,7 @@ namespace RMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tables");
+                    b.ToTable("Tables", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

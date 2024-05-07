@@ -38,7 +38,7 @@ namespace RMS
 
                 if (!roleManager.RoleExistsAsync("Admin").Result)
                 {
-                    IdentityResult roleResult = roleManager.CreateAsync(new("Admin")).Result;
+                    IdentityResult roleResult = roleManager.CreateAsync(new IdentityRole("Admin")).Result;
                 }
 
                 if (!roleManager.RoleExistsAsync("Employee").Result)

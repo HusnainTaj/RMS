@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RMS.Data;
 using RMS.Models;
 
-namespace RMS.Areas.Admin.Views
+namespace RMS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class StocksController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -165,14 +167,14 @@ namespace RMS.Areas.Admin.Views
             {
                 _context.Stocks.Remove(stock);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StockExists(int id)
         {
-          return (_context.Stocks?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Stocks?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

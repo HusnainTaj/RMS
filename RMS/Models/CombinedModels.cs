@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
@@ -19,6 +20,7 @@ namespace RMS.Models
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = null!;
 
+        [ValidateNever]
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
     }
     public class Stock
@@ -35,9 +37,11 @@ namespace RMS.Models
         public int SupplierId { get; set; }
 
         [ForeignKey("MenuItemId")]
+        [ValidateNever]
         public MenuItem MenuItem { get; set; } = null!;
 
         [ForeignKey("SupplierId")]
+        [ValidateNever]
         public Supplier Supplier { get; set; } = null!;
     }
     public class MenuItem
@@ -63,10 +67,14 @@ namespace RMS.Models
         [Required]
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
+        [ValidateNever]
         public Category Category { get; set; } = null!;
 
+        [ValidateNever]
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
+        [ValidateNever]
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        [ValidateNever]
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
     public class Category
@@ -76,6 +84,7 @@ namespace RMS.Models
         public string Name { get; set; } = null!;
         [Required]
         public string Description { get; set; } = null!;
+        [ValidateNever]
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
     }
     public class Review
@@ -96,9 +105,11 @@ namespace RMS.Models
         public int ItemId { get; set; }
 
         [ForeignKey("CustomerId")]
+        [ValidateNever]
         public AppUser Customer { get; set; } = null!;
 
         [ForeignKey("ItemId")]
+        [ValidateNever]
         public MenuItem Item { get; set; } = null!;
     }
     public class Payment
@@ -122,6 +133,7 @@ namespace RMS.Models
         public int OrderId { get; set; }
 
         [ForeignKey("OrderId")]
+        [ValidateNever]
         public Order Order { get; set; } = null!;
     }
     public enum PaymentStatus
@@ -213,15 +225,20 @@ namespace RMS.Models
         public int? ReservationId { get; set; }
 
         [ForeignKey("CustomerId")]
+        [ValidateNever]
         public AppUser Customer { get; set; } = null!;
 
         [ForeignKey("PromotionId")]
+        [ValidateNever]
         public Promotion? Promotion { get; set; }
 
         [ForeignKey("ReservationId")]
+        [ValidateNever]
         public Reservation? Reservation { get; set; }
 
+        [ValidateNever]
         public Payment Payment { get; set; } = null!;
+        [ValidateNever]
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
     public class OrderItem
@@ -241,9 +258,11 @@ namespace RMS.Models
         public int MenuItemId { get; set; }
 
         [ForeignKey("OrderId")]
+        [ValidateNever]
         public Order Order { get; set; } = null!;
 
         [ForeignKey("MenuItemId")]
+        [ValidateNever]
         public MenuItem MenuItem { get; set; } = null!;
 
     }
@@ -272,6 +291,7 @@ namespace RMS.Models
         [Required]
         public int Capacity { get; set; }
 
+        [ValidateNever]
         public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
     public class Reservation
@@ -288,9 +308,11 @@ namespace RMS.Models
         public int OrderId { get; set; }
 
         [ForeignKey("TableId")]
+        [ValidateNever]
         public Table Table { get; set; } = null!;
 
         [ForeignKey("OrderId")]
+        [ValidateNever]
         public Order Order { get; set; } = null!;
 
         [Required]
@@ -333,6 +355,7 @@ namespace RMS.Models
         public string EmployeeId { get; set; } = null!;
 
         [ForeignKey("EmployeeId")]
+        [ValidateNever]
         public AppUser Employee { get; set; } = null!;
     }
 }

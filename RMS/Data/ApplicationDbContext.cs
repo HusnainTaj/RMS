@@ -36,5 +36,15 @@ namespace RMS.Data
         //public DbSet<OrderType> OrderTypes { get; set; } = null!;
 
         //public DbSet<ReservationStatus> ReservationStatuses { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<OrderItem>(e=>
+            {
+                e.ToTable("OrderItems", tb => tb.HasTrigger("DecrementStockOnOrder"));
+            });
+        }
     }
 }

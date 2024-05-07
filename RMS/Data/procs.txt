@@ -1,0 +1,57 @@
+﻿CREATE PROC GetSuppliers
+AS
+BEGIN
+	SELECT * FROM Supplier
+END
+
+EXEC GetSuppliers
+
+-- ------------------------------------------------
+
+CREATE PROC GetTables
+AS
+BEGIN
+	SELECT * FROM [Tables]
+END
+
+EXEC GetTables
+
+-- ------------------------------------------------
+
+CREATE PROC GetPromotions
+AS
+BEGIN
+	SELECT * FROM Promotions;
+END
+
+EXEC GetPromotions
+
+-- ------------------------------------------------
+
+CREATE PROC GetCategories
+AS
+BEGIN
+	SELECT * FROM Categories;
+END
+
+EXEC GetCategories
+
+
+-- ------------------------------------------------
+
+CREATE TRIGGER DecrementStockOnOrder
+ON OrderItems
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @MenuItemId INT;
+    DECLARE @Quantity INT;
+
+    SELECT @MenuItemId = MenuItemId, @Quantity = Quantity
+    FROM inserted;
+
+    UPDATE Stocks SET Quantity = Quantity - @Quantity
+    WHERE MenuItemId = @MenuItemId;
+END

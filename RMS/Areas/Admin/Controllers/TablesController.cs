@@ -25,8 +25,9 @@ namespace RMS.Areas.Admin.Controllers
         // GET: Admin/Tables
         public async Task<IActionResult> Index()
         {
+            //await _context.Tables.ToListAsync()
               return _context.Tables != null ? 
-                          View(await _context.Tables.ToListAsync()) :
+                          View(await _context.Tables.FromSqlRaw("EXECUTE GetTables").ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Tables'  is null.");
         }
 

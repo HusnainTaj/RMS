@@ -48,25 +48,40 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
-            $('#itemQAdd').on('click', function () 
+        $(document).ready(function () 
+        {
+            function validateQuantity()
             {
                 var currentValue = parseInt($('#itemQuantity').val()) || 0;
-                $('#itemQuantity').val(currentValue + 1);
-                if (currentValue > @stockCount) $('#itemQuantity').val(@stockCount);
+                if (currentValue <= 0) $('#itemQuantity').val(1);
+                if (currentValue >= @stockCount) $('#itemQuantity').val(@stockCount);
+            }
 
+            $('#itemQAdd').on('click', function () 
+            {
+                $('#itemQuantity').val(parseInt($('#itemQuantity').val()) + 1);
+
+                validateQuantity();
             });
 
             $('#itemQMinus').on('click', function () 
             {
-                var currentValue = parseInt($('#itemQuantity').val()) || 2;
-                if (currentValue > 0) $('#itemQuantity').val(currentValue - 1);
+                $('#itemQuantity').val(parseInt($('#itemQuantity').val()) - 1);
+
+                validateQuantity();
+            });
+
+            $('#itemQuantity').on('change focus blur', function () {
+
+                validateQuantity();
             });
 
             $('#AddToCartBtn').on('click',async function () {
 
                 try
                 {
+                    validateQuantity();
+
                     $(this).addClass('disabled');
                     $(this).text('Adding...');
 

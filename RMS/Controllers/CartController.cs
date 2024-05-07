@@ -92,9 +92,10 @@ namespace RMS.Controllers
                         MenuItemId = item.Id,
                         Quantity = item.Quantity,
                     });
-                    var stock = _context.Stocks.FirstOrDefault(s => s.MenuItemId == item.Id);
 
-                    if(stock is not null) stock.Quantity -= item.Quantity;
+                    // Handled by DecrementStockOnOrder Tirgger now 
+                    //var stock = _context.Stocks.OrderByDescending(s=>s.Quantity).FirstOrDefault(s => s.MenuItemId == item.Id);
+                    //if(stock is not null) stock.Quantity -= item.Quantity;
                 }
 
                 Promotion? promotion = null;

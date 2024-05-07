@@ -25,8 +25,9 @@ namespace RMS.Areas.Admin.Controllers
         // GET: Admin/Suppliers
         public async Task<IActionResult> Index()
         {
+            //await _context.Supplier.ToListAsync()
               return _context.Supplier != null ? 
-                          View(await _context.Supplier.ToListAsync()) :
+                          View(await _context.Supplier.FromSqlRaw("EXECUTE GetSuppliers").ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Supplier'  is null.");
         }
 

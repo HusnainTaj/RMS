@@ -25,8 +25,9 @@ namespace RMS.Areas.Admin.Controllers
         // GET: Admin/Categories
         public async Task<IActionResult> Index()
         {
+            //await _context.Categories.ToListAsync()
               return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
+                          View(await _context.Categories.FromSqlRaw("EXECUTE GetCategories").ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
         }
 
