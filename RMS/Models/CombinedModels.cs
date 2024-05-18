@@ -66,6 +66,7 @@ namespace RMS.Models
 
         [Required]
         public int CategoryId { get; set; }
+
         [ForeignKey("CategoryId")]
         [ValidateNever]
         public Category Category { get; set; } = null!;
@@ -147,24 +148,6 @@ namespace RMS.Models
         Cash,
         Card
     }
-    //public class PaymentMethod
-    //{
-    //    public int Id { get; set; }
-
-    //    [Required]
-    //    [StringLength(255)]
-    //    public string Name { get; set; } = null!;
-    //}
-    //public class PaymentStatus
-    //{
-    //    [Key]
-    //    public int Id { get; set; }
-
-    //    [Required]
-    //    [StringLength(255)]
-    //    public string Name { get; set; } = null!;
-    //}
-   
     public class Promotion
     {
         [Key]

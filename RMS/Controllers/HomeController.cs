@@ -41,6 +41,7 @@ namespace RMS.Controllers
 
         public async Task<IActionResult> Item(int id)
         {
+
             return View((await _context.MenuItems.Include(m=>m.Category).Include(m=>m.Reviews).ThenInclude(r=>r.Customer)
                 .Include(m=>m.Stocks)
                 .ToListAsync()).Find(i => i.Id.Equals(id)));

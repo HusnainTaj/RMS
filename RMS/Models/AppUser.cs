@@ -17,7 +17,6 @@ namespace RMS.Models
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
         public ICollection<EmployeeBonus> Bonuses { get; set; } = new List<EmployeeBonus>();
     }
 }

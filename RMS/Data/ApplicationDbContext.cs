@@ -20,7 +20,6 @@ namespace RMS.Data
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Promotion> Promotions { get; set; } = null!;
-
         public DbSet<Payment> Payments { get; set; }
 
         public DbSet<Table> Tables { get; set; }
