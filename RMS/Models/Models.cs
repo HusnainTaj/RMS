@@ -23,6 +23,7 @@ namespace RMS.Models
         [ValidateNever]
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
     }
+
     public class Stock
     {
         public int Id { get; set; }
@@ -170,8 +171,6 @@ namespace RMS.Models
 
         [Required]
         public DateTime End { get; set; }
-
-        //public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 
 
@@ -249,23 +248,6 @@ namespace RMS.Models
         public MenuItem MenuItem { get; set; } = null!;
 
     }
-    //public class OrderType
-    //{
-    //    public int Id { get; set; }
-
-    //    [Required]
-    //    [StringLength(255)]
-    //    public string Name { get; set; } = null!;   
-    //}
-    //public class OrderStatus
-    //{
-    //    [Key]
-    //    public int Id { get; set; }
-
-    //    [Required]
-    //    [StringLength(255)]
-    //    public string Name { get; set; } = null!;
-    //}
     public class Table
     {
         [Key]
@@ -307,16 +289,6 @@ namespace RMS.Models
         Reserved,
         Available
     }
-
-    //public class ReservationStatus
-    //{
-    //    [Key]
-    //    public int Id { get; set; }
-
-    //    [Required]
-    //    [StringLength(255)]
-    //    public string Name { get; set; } = null!;
-    //}
     public class EmployeeBonus
     {
         [Key]
